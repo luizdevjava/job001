@@ -105,21 +105,29 @@ async function seed() {
     const totalAnuncios = await db.anuncio.count()
     
     if (totalAnuncios === 0) {
+      console.log(`📝 Criando ${anunciosExemplo.length} anúncios de exemplo...`)
+      
       for (const anuncioData of anunciosExemplo) {
         const { midias, ...anuncioInfo } = anuncioData
         
-        const anuncio = await db.anuncio.create({
-          data: anuncioInfo
-        })
-
-        // Adicionar mídias
-        for (const midia of midias) {
-          await db.anuncioMidia.create({
-            data: {
-              anuncioId: anuncio.id,
-              ...midia
-            }
+        try {
+          const anuncio = await db.anuncio.create({
+            data: anuncioInfo
           })
+
+          // Adicionar mídias
+          for (const midia of midias) {
+            await db.anuncioMidia.create({
+              data: {
+                anuncioId: anuncio.id,
+                ...midia
+              }
+            })
+          }
+          
+          console.log(`✅ Anúncio "${anuncioInfo.nome}" criado`)
+        } catch (error) {
+          console.error(`❌ Erro ao criar anúncio "${anuncioInfo.nome}":`, error)
         }
       }
       
@@ -138,4 +146,9 @@ async function seed() {
   }
 }
 
-seed()
+// Executar seed apenas se chamado diretamente
+if (require.main === module) {
+  seed()
+}
+
+export default seed

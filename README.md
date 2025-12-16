@@ -1,6 +1,6 @@
 # Acompanhantes VIP
 
-Site moderno e intuitivo de anúncios de acompanhantes, desenvolvido com Next.js 15, TypeScript, Tailwind CSS e Prisma.
+Site moderno e intuitivo de anúncios de acompanhantes, desenvolvido com Next.js 15, TypeScript, Tailwind CSS e **Neon PostgreSQL**.
 
 ## 🚀 Funcionalidades
 
@@ -26,42 +26,81 @@ Site moderno e intuitivo de anúncios de acompanhantes, desenvolvido com Next.js
 
 - **Frontend**: Next.js 15, TypeScript, Tailwind CSS, shadcn/ui
 - **Backend**: Next.js API Routes, Prisma ORM
-- **Banco de Dados**: SQLite (desenvolvimento) / PostgreSQL (produção)
+- **Banco de Dados**: **Neon PostgreSQL** (serverless, escalável)
 - **Autenticação**: JWT com bcryptjs
 - **Imagens**: URLs externas (sem upload)
-- **Deploy**: Vercel compatível
+- **Deploy**: Vercel otimizado
 
-## 📋 Instalação e Configuração
+---
 
-### 1. Clonar o projeto
+## 🌟 **NOVO: Configuração com Neon Database**
+
+Este projeto agora usa **Neon PostgreSQL** - banco serverless, rápido e gratuito!
+
+### ⚡ Setup em 5 minutos
+
+#### 1️⃣ Criar Banco Neon
+1. Acesse [**neon.tech**](https://neon.tech) → Sign up (grátis)
+2. Create Project → Nome: `acompanhantes-vip`
+3. Copie as connection strings
+
+#### 2️⃣ Configurar no Vercel
+No projeto Vercel → Settings → Environment Variables:
+```env
+DATABASE_URL=postgresql://user:password@ep-xxx.us-east-2.aws.neon.tech/dbname?sslmode=require&pgbouncer=true&connect_timeout=10
+DIRECT_URL=postgresql://user:password@ep-xxx.us-east-2.aws.neon.tech/dbname?sslmode=require&connect_timeout=10
+JWT_SECRET=chave-super-secreta-123456
+NEXT_PUBLIC_SITE_URL=https://seu-projeto.vercel.app
+```
+
+#### 3️⃣ Deploy
+```bash
+git add .
+git commit -m "Configurar Neon Database"
+git push origin main
+```
+
+📖 **Guia completo**: `NEON-SETUP.md`
+
+---
+
+## 📋 Instalação Local
+
+### Com Neon (Recomendado)
+1. **Clonar e instalar**
 ```bash
 git clone <repositório>
 cd acompanhantes-vip
-```
-
-### 2. Instalar dependências
-```bash
 npm install
+npm run neon:setup
 ```
 
-### 3. Configurar variáveis de ambiente
-Criar arquivo `.env`:
-```env
-DATABASE_URL="file:./dev.db"
-JWT_SECRET="seu-secret-key-aqui"
-NEXT_PUBLIC_SITE_URL="https://seu-dominio.com"
-```
-
-### 4. Configurar banco de dados
+2. **Configurar ambiente**
 ```bash
-npm run db:generate
-npm run db:push
+cp .env.example .env
+# Edite .env com suas credenciais Neon
+```
+
+3. **Testar conexão**
+```bash
+npm run db:test
+```
+
+4. **Popular banco**
+```bash
 npm run db:seed
 ```
 
-### 5. Executar o projeto
+5. **Executar**
 ```bash
 npm run dev
+```
+
+### Com SQLite (Desenvolvimento)
+Use o arquivo `.env.local` com:
+```env
+DATABASE_URL="file:./dev.db"
+JWT_SECRET="secret-local"
 ```
 
 ## 🔐 Credenciais de Acesso
@@ -70,7 +109,7 @@ npm run dev
 - **Email**: admin@acompanhantes.com
 - **Senha**: admin123
 
-> ⚠️ **Importante**: Altere as credenciais em produção usando o painel admin ou diretamente no banco.
+> ⚠️ **Importante**: Altere as credenciais em produção!
 
 ## 📁 Estrutura do Projeto
 
@@ -109,33 +148,36 @@ Edite o componente `Filters.tsx` para personalizar:
 
 ## 📱 Deploy
 
-### Vercel (Recomendado)
-1. Conecte o repositório ao Vercel
-2. Configure as variáveis de ambiente
-3. Deploy automático
+### Vercel com Neon (Recomendado)
+1. Configure as variáveis de ambiente (ver acima)
+2. Push para o repositório
+3. Deploy automático no Vercel
 
-### Outras plataformas
-1. Build do projeto: `npm run build`
-2. Configure o banco de dados PostgreSQL
-3. Ajuste a variável `DATABASE_URL`
-4. Inicie com: `npm start`
+### Scripts Úteis
+```bash
+# Testar conexão com banco
+npm run db:test
+
+# Setup completo Neon
+npm run neon:setup
+
+# Apenas push do schema
+npm run neon:push
+
+# Seed com diret URL
+npm run neon:seed
+```
 
 ## 🔧 Manutenção
 
-### Backup do Banco
+### Backup do Banco (Neon)
+O Neon faz backup automaticamente, mas você pode:
 ```bash
-# Para SQLite
-cp db/dev.db backup/dev-$(date +%Y%m%d).db
+# Exportar dados
+npm run db:seed --export
 
-# Para PostgreSQL
-pg_dump nome_do_banco > backup.sql
-```
-
-### Atualizar Dados
-```bash
-# Resetar e popular novamente
+# Resetar banco (cuidado!)
 npm run db:reset
-npm run db:seed
 ```
 
 ## 📝 Features Futuras
@@ -167,4 +209,4 @@ Todos os anúncios são de responsabilidade exclusiva dos anunciantes.
 
 ---
 
-**Desenvolvido com ❤️ usando Next.js 15**
+**Desenvolvido com ❤️ usando Next.js 15 + Neon PostgreSQL**
